@@ -4,11 +4,9 @@ import type { NextRequest } from "next/server";
 import { verifyToken } from "@/lib/auth"; // Import the updated verifyToken
 
 const TOKEN_COOKIE_NAME = "authToken";
-const LOGIN_PATH = "/login";
-const SIGNUP_PATH = "/signup";
 const DEFAULT_PROTECTED_REDIRECT = "/dashboard";
 const PROTECTED_PATHS = ["/dashboard"]; // Add more paths as needed
-const AUTH_PATHS = [LOGIN_PATH, SIGNUP_PATH];
+const AUTH_PATHS = ["/login", "/signup"];
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
@@ -27,7 +25,7 @@ export async function middleware(request: NextRequest) {
     // Rule 1: Trying to access a PROTECTED page WITHOUT being logged in?
     const isAccessingProtectedRoute = PROTECTED_PATHS.some((path) => pathname.startsWith(path));
     if (isAccessingProtectedRoute && !isUserAuthenticated) {
-        const loginUrl = new URL(LOGIN_PATH, request.url);
+        const loginUrl = new URL("/login", request.url);
         loginUrl.searchParams.set("redirectedFrom", pathname);
         return NextResponse.redirect(loginUrl);
     }
