@@ -26,20 +26,33 @@ export default function DashboardPage() {
         }
     };
 
-    // Corrected loading check (!!user → !user)
     if (!user || Object.keys(user).length === 0 || !user.email) {
-        return <p>Loading user data or redirecting...</p>;
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900" />
+            </div>
+        );
     }
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center p-4">
-            <h1 className="text-3xl font-bold mb-4">Welcome to your Dashboard!</h1>
-            <p className="mb-6">
-                You are logged in as: <span className="font-semibold">{user.email}</span>
-            </p>
-            <Button onClick={handleLogout} variant="destructive">
-                Log Out
-            </Button>
+        <div className="min-h-screen flex flex-col items-center justify-center p-4">
+            <div className="w-full max-w-md space-y-6">
+                <h1 className="text-3xl font-bold text-center">Your Dashboard</h1>
+
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+                    <p className="text-lg mb-4">
+                        Welcome back, <span className="font-semibold">{user.email}</span>
+                    </p>
+
+                    <div className="space-y-4">
+                        <Button className="w-full">Profile Settings</Button>
+
+                        <Button variant="outline" className="w-full" onClick={handleLogout}>
+                            Sign Out
+                        </Button>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
