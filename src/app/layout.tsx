@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "@/app/globals.css";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { ConditionalNavbar } from "@/components/navbar/ConditionalNavbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,10 @@ export default function RootLayout({
         <html lang="en">
             <body className={inter.className}>
                 <QueryProvider>
+                    <header className="sticky top-0 z-10 bg-white shadow-md">
+                        <ConditionalNavbar />
+                    </header>
+
                     {children}
                     <Toaster />
                 </QueryProvider>

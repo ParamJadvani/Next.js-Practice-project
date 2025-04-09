@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { getUserFromCookie } from "@/actions/auth/getUserFromCookie";
+import { getUserFromCookie } from "@/_actions/auth/getUserFromCookie";
 import useAuthStore from "@/store/authStore";
 
 export default function AuthHydration() {

@@ -1,4 +1,3 @@
-// /components/auth/LoginForm.tsx
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -16,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
 export function LoginForm() {
     const { login } = useAuth();
@@ -34,14 +33,12 @@ export function LoginForm() {
     };
 
     return (
-        <Card className="w-full max-w-sm">
+        <Card className="w-full max-w-sm mx-auto">
             <CardHeader>
-                <CardTitle>Login to your account</CardTitle>
-                <CardDescription>
-                    Enter your email and password to access your account.
-                </CardDescription>
+                <CardTitle>Login</CardTitle>
+                <CardDescription>Welcome back, login to continue.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
@@ -61,6 +58,7 @@ export function LoginForm() {
                                 </FormItem>
                             )}
                         />
+
                         <FormField
                             control={form.control}
                             name="password"
@@ -74,6 +72,7 @@ export function LoginForm() {
                                 </FormItem>
                             )}
                         />
+
                         <Button type="submit" className="w-full" disabled={login.isPending}>
                             {login.isPending ? "Logging in..." : "Login"}
                         </Button>

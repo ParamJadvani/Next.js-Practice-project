@@ -1,16 +1,12 @@
+import { UserType } from "@/Types";
 import { create } from "zustand";
-
-interface User {
-    id: string;
-    email: string;
-}
 
 interface AuthStore {
     isLogin: boolean;
-    user: User | null;
-    login: (user: User) => void;
+    user: UserType | null;
+    login: (user: UserType) => void;
     logout: () => void;
-    initialize: (authState: { isLogin: boolean; user: User | null }) => void;
+    initialize: (authState: { isLogin: boolean; user: UserType | null }) => void;
 }
 
 const useAuthStore = create<AuthStore>((set) => ({

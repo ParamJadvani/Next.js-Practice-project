@@ -1,4 +1,3 @@
-// /components/auth/SignupForm.tsx
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -16,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
 export function SignupForm() {
     const { signup } = useAuth();
@@ -28,18 +27,18 @@ export function SignupForm() {
     const onSubmit = (data: SignupInput) => {
         toast.promise(signup.mutateAsync(data), {
             loading: "Signing up...",
-            success: "Welcome aboard!",
+            success: "Account created!",
             error: (err: Error) => err.message,
         });
     };
 
     return (
-        <Card className="w-full max-w-sm">
+        <Card className="w-full max-w-sm mx-auto">
             <CardHeader>
-                <CardTitle>Sign Up to your account</CardTitle>
-                <CardDescription>Create your account to get started.</CardDescription>
+                <CardTitle>Sign Up</CardTitle>
+                <CardDescription>Join us by creating an account.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
@@ -59,6 +58,7 @@ export function SignupForm() {
                                 </FormItem>
                             )}
                         />
+
                         <FormField
                             control={form.control}
                             name="password"
@@ -72,8 +72,9 @@ export function SignupForm() {
                                 </FormItem>
                             )}
                         />
+
                         <Button type="submit" className="w-full" disabled={signup.isPending}>
-                            {signup.isPending ? "Signing Up..." : "Sign Up"}
+                            {signup.isPending ? "Signing up..." : "Sign Up"}
                         </Button>
                     </form>
                 </Form>

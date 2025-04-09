@@ -1,24 +1,29 @@
-import AuthHydration from "@/components/auth/AuthHydration";
+// /app/(main)/dashboard/layout.tsx
+"use client"; // Keep top-level layout client for provider/auth hydration
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+import React from "react";
+import { SidebarProvider } from "@/components/ui/sidebar"; // Only Provider needed here
+import AuthHydration from "@/components/auth/AuthHydration";
+import DashboardLayoutClient from "@/app/(main)/dashboard/dashboard-layout-client";
+
+export default function DashboardLayout({
+    children,
+    sidebar, // The parallel route slot
+}: {
+    children: React.ReactNode;
+    sidebar: React.ReactNode;
+}) {
+    // No hooks called here
+
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        // Provider wraps the actual layout implementation component
+        <SidebarProvider>
+            {/* AuthHydration can be here or inside the client component */}
             <AuthHydration />
-            <header className="sticky top-0 z-10 bg-white dark:bg-gray-800 shadow-md">
-                <div className="flex items-center justify-between px-6 py-4">
-                    <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
-                        My Dashboard
-                    </h1>
-                    <div className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
-                        Settings
-                    </div>
-                </div>
-            </header>
-            <div className="flex">
-                <main className="ml-64 flex-1 p-6">
-                    <div className="max-w-7xl mx-auto">{children}</div>
-                </main>
-            </div>
-        </div>
+
+            {/* Render the client component that uses the hook */}
+            {/* Pass down the sidebar slot and children */}
+            <DashboardLayoutClient dashboardSideBar={sidebar}>{children}</DashboardLayoutClient>
+        </SidebarProvider>
     );
 }
