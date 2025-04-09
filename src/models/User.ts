@@ -23,24 +23,18 @@ const UserSchema = new Schema<IUser>(
             select: false,
         },
     },
-    {
-        timestamps: true,
-    }
+    { timestamps: true }
 );
 
 UserSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
-    if (this.password) {
-        this.password = await bcrypt.hash(this.password, 12);
-    }
+    this.password = await bcrypt.hash(this.password, 12);
     next();
 });
 
-
 UserSchema.methods.comparePassword = async function (password: string) {
-    return await bcrypt.compare(password, this.password);
+    return bcrypt.compare(password, this.password);
 };
 
 const User = models.User || model<IUser>("User", UserSchema);
-
 export default User;

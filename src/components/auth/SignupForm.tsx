@@ -1,14 +1,11 @@
-"use client"; // This component interacts with the user, so it's a client component
+// /components/auth/SignupForm.tsx
+"use client";
 
-import { useState } from "react";
-// import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignupSchema, SignupInput } from "@/lib/validations";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     Form,
     FormControl,
@@ -17,74 +14,34 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-// import { toast } from "sonner";
-// import useAuthStore from "@/store/authStore";
-import { SignupAction } from "@/actions/auth/auth";
+import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function SignupForm() {
-    // const router = useRouter();
-    const [isLoading] = useState(false);
-    // const loginAction = useAuthStore((state) => state.login);
-
-    // Setup form validation using react-hook-form and Zod
+    const { signup } = useAuth();
     const form = useForm<SignupInput>({
         resolver: zodResolver(SignupSchema),
-        defaultValues: {
-            email: "",
-            password: "",
-        },
+        defaultValues: { email: "", password: "" },
     });
 
-    // Function to handle form submission
-    // async function onSubmit(values: SignupInput) {
-    //     setIsLoading(true); // Show loading indicator
-
-    //     try {
-    //         const response = await fetch("/api/auth/signup", {
-    //             method: "POST",
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify(values),
-    //         });
-
-    //         const data = await response.json();
-
-    //         if (!response.ok) {
-    //             // Show error message from server if signup failed
-    //             throw new Error(data.message || "Signup failed. Please try again.");
-    //         }
-
-    //         toast("Signup Successful!", {
-    //             description: "Welcome aboard!",
-    //         });
-
-    //         // Update Zustand store with user info
-    //         if (data.user) {
-    //             loginAction(data.user);
-    //         }
-
-    //         // Redirect to dashboard (or another protected page)
-    //         router.push("/dashboard"); // Adjust the redirect path if needed
-    //     } catch (error: unknown) {
-    //         if (error instanceof Error)
-    //             toast("Signup Failed", {
-    //                 description: error.message || "An unexpected error occurred.",
-    //             });
-    //     } finally {
-    //         setIsLoading(false); // Hide loading indicator
-    //     }
-    // }
+    const onSubmit = (data: SignupInput) => {
+        toast.promise(signup.mutateAsync(data), {
+            loading: "Signing up...",
+            success: "Welcome aboard!",
+            error: (err: Error) => err.message,
+        });
+    };
 
     return (
         <Card className="w-full max-w-sm">
             <CardHeader>
-                <CardTitle>Sign Up</CardTitle>
+                <CardTitle>Sign Up to your account</CardTitle>
                 <CardDescription>Create your account to get started.</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
                 <Form {...form}>
-                    {/* <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4"> */}
-                    <form action={SignupAction}>
-                        {/* Email Field */}
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
                             control={form.control}
                             name="email"
@@ -93,16 +50,15 @@ export function SignupForm() {
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
                                         <Input
+                                            type="email"
                                             placeholder="you@example.com"
                                             {...field}
-                                            type="email"
                                         />
                                     </FormControl>
-                                    <FormMessage /> {/* Shows validation errors */}
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        {/* Password Field */}
                         <FormField
                             control={form.control}
                             name="password"
@@ -110,14 +66,14 @@ export function SignupForm() {
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="••••••••" {...field} type="password" />
+                                        <Input type="password" placeholder="••••••••" {...field} />
                                     </FormControl>
-                                    <FormMessage /> {/* Shows validation errors */}
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full" disabled={isLoading}>
-                            {isLoading ? "Signing Up..." : "Sign Up"}
+                        <Button type="submit" className="w-full" disabled={signup.isPending}>
+                            {signup.isPending ? "Signing Up..." : "Sign Up"}
                         </Button>
                     </form>
                 </Form>
