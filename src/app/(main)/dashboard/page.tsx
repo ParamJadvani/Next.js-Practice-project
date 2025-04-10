@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 export default function DashboardPage() {
     const user = useAuthStore((state) => state.user);
     const { logout } = useAuth();
+    console.log(user);
 
     const isUserLoading = !user || !user.email;
 
@@ -37,7 +38,10 @@ export default function DashboardPage() {
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md w-full">
                     <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">
                         Welcome back,{" "}
-                        <span className="font-semibold">{user.email.split("@")[0]}</span>
+                        <span className="font-semibold">
+                            {user.username[0].toUpperCase()}
+                            {user.username.slice(1)}
+                        </span>
                     </p>
                     <div className="flex flex-col space-y-4">
                         <Link

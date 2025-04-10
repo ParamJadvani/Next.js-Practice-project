@@ -2,6 +2,7 @@ import { Schema, Document, models, model } from "mongoose";
 import bcrypt from "bcryptjs";
 
 export interface IUser extends Document {
+    username: string;
     email: string;
     password: string;
     comparePassword(password: string): Promise<boolean>;
@@ -9,6 +10,10 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema<IUser>(
     {
+        username: {
+            type: String,
+            required: [true, "Username is required"],
+        },
         email: {
             type: String,
             required: [true, "Email is required"],

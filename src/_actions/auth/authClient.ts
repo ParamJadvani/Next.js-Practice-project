@@ -1,10 +1,18 @@
 import axios, { AxiosError } from "axios";
 
-export async function signupUser({ email, password }: { email: string; password: string }) {
+export async function signupUser({
+    username,
+    email,
+    password,
+}: {
+    username: string;
+    email: string;
+    password: string;
+}) {
     try {
         const response = await axios.post(
             "/api/auth/signup",
-            { email, password },
+            { username, email, password },
             { withCredentials: true } // ✅ include cookies
         );
 

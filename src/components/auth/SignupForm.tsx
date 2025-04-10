@@ -21,7 +21,11 @@ export function SignupForm() {
     const { signup } = useAuth();
     const form = useForm<SignupInput>({
         resolver: zodResolver(SignupSchema),
-        defaultValues: { email: "", password: "" },
+        defaultValues: {
+            username: "",
+            email: "",
+            password: "",
+        },
     });
 
     const onSubmit = (data: SignupInput) => {
@@ -41,6 +45,19 @@ export function SignupForm() {
             <CardContent>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="username"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Username</FormLabel>
+                                    <FormControl>
+                                        <Input type="text" placeholder="john-doe" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <FormField
                             control={form.control}
                             name="email"

@@ -1,6 +1,6 @@
 // /app/(main)/dashboard/products/page.tsx
 
-import Products from "@/app/(main)/dashboard/products/default";
+import Products from "@/app/(main)/products/default";
 
 export default function ProductsPage() {
     return (

@@ -15,6 +15,7 @@ if (!JWT_SECRET) {
 export interface UserPayload extends JWTPayload {
     id: string; // User's unique ID from the database
     email: string; // User's email
+    username: string;
 }
 
 // --- Token Generation (Using jsonwebtoken - Runs in Node.js API Routes) ---
@@ -42,7 +43,7 @@ export async function verifyToken(token: string): Promise<UserPayload | null> {
         );
 
         // Ensure the essential fields exist in the payload.
-        if (!payload.id || !payload.email) {
+        if (!payload.id || !payload.email || !payload.username) {
             console.error("Token verification succeeded but payload missing essential fields.");
             return null;
         }

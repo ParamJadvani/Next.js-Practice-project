@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
 
         const userForToken = {
             id: user._id,
+            username: user.username,
             email: user.email,
         };
 
@@ -40,7 +41,10 @@ export async function POST(request: NextRequest) {
         });
 
         return NextResponse.json(
-            { message: "Login successful!", user: { id: user._id, email: user.email } },
+            {
+                message: "Login successful!",
+                user: { id: user._id, email: user.email, username: user.username },
+            },
             { status: 200 }
         );
     } catch (error: unknown) {

@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
         // Validate input
         const validatedData = SignupSchema.parse(body);
-        const { email, password } = validatedData;
+        const { username, email, password } = validatedData;
 
         // Check if user already exists
         const existingUser = await User.findOne({ email });
@@ -22,10 +22,11 @@ export async function POST(request: NextRequest) {
         }
 
         // Create new user (password hashing handled by pre-save hook)
-        const newUser = await User.create({ email, password });
+        const newUser = await User.create({ username, email, password });
 
         const userForToken = {
             id: newUser._id,
+            username: newUser.username,
             email: newUser.email,
         };
 
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
             {
                 message: "User registered successfully!",
-                user: { id: newUser._id, email: newUser.email },
+                user: { id: newUser._id, email: newUser.email, username: newUser.username },
             },
             { status: 201 }
         );

@@ -2,8 +2,9 @@
 
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/auth";
+import { UserType } from "@/Types";
 
-export async function getUserFromCookie() {
+export async function getUserFromCookie(): Promise<UserType | null> {
     const token = (await cookies()).get("authToken")?.value;
     if (!token) return null;
 

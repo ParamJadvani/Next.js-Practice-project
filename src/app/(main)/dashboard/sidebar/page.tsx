@@ -11,8 +11,8 @@ export default function DashboardSidebarPage() {
 
     const sidebarLinks = [
         { label: "Dashboard", icon: <LayoutDashboard className="h-5 w-5" />, href: "/dashboard" },
-        { label: "Products", icon: <Box className="h-5 w-5" />, href: "/dashboard/products" },
-        { label: "Settings", icon: <Settings className="h-5 w-5" />, href: "/dashboard/settings" },
+        { label: "Products", icon: <Box className="h-5 w-5" />, href: "/products" },
+        { label: "Settings", icon: <Settings className="h-5 w-5" />, href: "/settings" },
         { label: "Logout", icon: <LogOut className="h-5 w-5" />, href: "#" },
     ];
 
