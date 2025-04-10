@@ -45,10 +45,10 @@ export default function DashboardPage() {
                     </p>
                     <div className="flex flex-col space-y-4">
                         <Link
-                            href="/dashboard/settings"
+                            href="/dashboard/profile"
                             className="block text-center bg-black text-white p-2 rounded-md font-semibold"
                         >
-                            Profile Settings
+                            Profile
                         </Link>
                         <Button variant="outline" className="w-full" onClick={handleLogout}>
                             Sign Out

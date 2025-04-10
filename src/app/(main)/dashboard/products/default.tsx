@@ -7,6 +7,7 @@ import useProductStore from "@/store/productStore";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Products() {
     const { products, getProducts } = useProductStore();
@@ -50,15 +51,17 @@ export default function Products() {
             {products.map((product) => (
                 <Card key={product.id} className="transition-shadow hover:shadow-md">
                     <CardHeader className="space-y-2">
-                        <div className="relative aspect-[4/2] w-full rounded-md overflow-hidden">
-                            <Image
-                                src={product.image}
-                                alt={product.title}
-                                fill
-                                className="object-contain"
-                                sizes="(max-width: 768px) 100vw, 33vw"
-                            />
-                        </div>
+                        <Link href={`/dashboard/products/${product.id}`}>
+                            <div className="relative aspect-[4/2] w-full rounded-md overflow-hidden cursor-pointer  ">
+                                <Image
+                                    src={product.image}
+                                    alt={product.title}
+                                    fill
+                                    className="object-contain"
+                                    sizes="(max-width: 768px) 100vw, 33vw"
+                                />
+                            </div>
+                        </Link>
                         <CardTitle className="text-lg line-clamp-1">{product.title}</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-2">
@@ -66,9 +69,7 @@ export default function Products() {
                             {product.description}
                         </p>
                         <div className="flex justify-start">
-                            <p className="text-Primary font-semibold mr-1">
-                                Price :
-                            </p>
+                            <p className="text-Primary font-semibold mr-1">Price :</p>
                             <p className="font-semibold text-primary">
                                 ${product.price.toFixed(2)}
                             </p>

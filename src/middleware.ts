@@ -46,6 +46,7 @@ export const config = {
         /* Match all request paths except for the ones starting with: ... */
         "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)",
         "/dashboard/:path*",
+        "/products/:path*",
         "/login",
         "/signup",
     ],

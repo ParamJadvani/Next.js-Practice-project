@@ -3,17 +3,37 @@
 import { JSX, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Settings, Box, LayoutDashboard, LogOut, Menu } from "lucide-react";
+import { Box, LayoutDashboard, LogOut, Menu, CircleUserIcon } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function DashboardSidebarPage() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const { logout } = useAuth();
+
+    const handleLogout = async () => {
+        toast.promise(logout.mutateAsync(), {
+            loading: "Logging out...",
+            success: "Logged out successfully!",
+            error: (error: Error) => `Logout failed: ${error.message}`,
+        });
+    };
 
     const sidebarLinks = [
         { label: "Dashboard", icon: <LayoutDashboard className="h-5 w-5" />, href: "/dashboard" },
-        { label: "Products", icon: <Box className="h-5 w-5" />, href: "/products" },
-        { label: "Settings", icon: <Settings className="h-5 w-5" />, href: "/settings" },
-        { label: "Logout", icon: <LogOut className="h-5 w-5" />, href: "#" },
+        { label: "Products", icon: <Box className="h-5 w-5" />, href: "/dashboard/products" },
+        {
+            label: "Profile",
+            icon: <CircleUserIcon className="h-5 w-5" />,
+            href: "/dashboard/profile",
+        },
+        {
+            label: "Logout",
+            icon: <LogOut className="h-5 w-5" />,
+            href: "#",
+            onClick: handleLogout,
+        },
     ];
 
     return (
@@ -44,7 +64,6 @@ export default function DashboardSidebarPage() {
                     <SidebarContent links={sidebarLinks} />
                 </aside>
                 <main className="ml-64 w-full pt-16 px-6">
-                    {/* Page Content Goes Here */}
                     <h1 className="text-2xl font-semibold">Welcome to your dashboard!</h1>
                 </main>
             </div>
@@ -61,7 +80,7 @@ function SidebarContent({
     links,
     onLinkClick,
 }: {
-    links: { label: string; icon: JSX.Element; href: string }[];
+    links: { label: string; icon: JSX.Element; href: string; onClick?: () => void }[];
     onLinkClick?: () => void;
 }) {
     return (
@@ -71,7 +90,13 @@ function SidebarContent({
                     <Link
                         key={link.label}
                         href={link.href}
-                        onClick={onLinkClick}
+                        onClick={(e) => {
+                            if (link.onClick) {
+                                e.preventDefault(); // prevent navigation
+                                link.onClick();
+                            }
+                            onLinkClick?.();
+                        }}
                         className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200"
                     >
                         {link.icon}

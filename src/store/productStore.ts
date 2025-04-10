@@ -6,7 +6,7 @@ interface ProductStore {
     products: Array<ProductType>;
     product: ProductType | null;
     getProducts: () => void;
-    getProduct: (id: string) => void;
+    getProductById: (id: string) => void;
 }
 
 const useProductStore = create<ProductStore>((set) => ({
@@ -16,7 +16,7 @@ const useProductStore = create<ProductStore>((set) => ({
         const response = await productMethods.getProducts();
         set({ products: response });
     },
-    getProduct: async (id: string) => {
+    getProductById: async (id: string) => {
         const response = await productMethods.getProduct(id);
         set({ product: response[0] });
     },
