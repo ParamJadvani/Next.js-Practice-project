@@ -15,10 +15,10 @@ export default function ProfilePage() {
         <div className="min-h-screen bg-gray-50 p-8">
             <div className="flex flex-col items-center justify-center h-full space-y-2">
                 <div className="min-w-2xl">
-                    <Link href="/dashboard/products">
+                    <Link href="/dashboard">
                         <Button variant="outline" className="cursor-pointer">
                             <ArrowLeft className="mr-2" />
-                            Back to Products
+                            Back
                         </Button>
                     </Link>
                 </div>
