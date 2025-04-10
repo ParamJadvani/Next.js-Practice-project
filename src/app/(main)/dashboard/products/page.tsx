@@ -1,7 +1,6 @@
 // /app/(main)/dashboard/products/page.tsx
 
-// Correct the import path if you renamed the file
-import Products from "@/app/(main)/dashboard/products/default"; // Corrected path
+import Products from "@/app/(main)/dashboard/products/default";
 
 export default function ProductsPage() {
     return (
