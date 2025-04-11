@@ -34,6 +34,7 @@ export async function loginUser({ email, password }: { email: string; password: 
 
         return response.data;
     } catch (err: unknown) {
+        console.log(err)
         if (err instanceof AxiosError)
             throw new Error(err?.response?.data?.message || "Login failed");
         else if (err instanceof Error) throw new Error(err.message || "Login failed");

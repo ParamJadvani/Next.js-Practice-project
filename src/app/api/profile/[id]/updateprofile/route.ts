@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 
 const TOKEN_COOKIE_NAME = "authToken";
 
-export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
         await DBConnect();
 

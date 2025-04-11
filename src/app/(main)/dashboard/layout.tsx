@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-// import DashboardSidebarPage from "@/app/(main)/dashboard/@sidebar/page";
 
 export default function MainLayout({
     children,

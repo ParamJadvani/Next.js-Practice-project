@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { AlertTriangle } from "lucide-react";
+import { useRouter } from "next/router";
 
 export default function GlobalError({
     error,
@@ -12,6 +13,7 @@ export default function GlobalError({
     error: Error & { digest?: string };
     reset: () => void;
 }) {
+    const router = useRouter();
     useEffect(() => {
         console.error("An unexpected error occurred:", error);
     }, [error]);
@@ -51,7 +53,7 @@ export default function GlobalError({
                                 <Button variant="ghost">Cancel</Button>
                                 <Button
                                     className="bg-red-600 text-white hover:bg-red-700"
-                                    onClick={() => (window.location.href = "/dashboard  ")}
+                                    onClick={() => router.replace("/dashboard")}
                                 >
                                     Confirm
                                 </Button>

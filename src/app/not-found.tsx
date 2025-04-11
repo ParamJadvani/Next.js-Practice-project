@@ -25,7 +25,7 @@ export default function NotFound() {
                     </p>
                 </CardContent>
                 <CardFooter className="flex justify-center">
-                    <Link href="/">
+                    <Link href="/dashboard">
                         <Button variant="destructive">Go Back Home</Button>
                     </Link>
                 </CardFooter>

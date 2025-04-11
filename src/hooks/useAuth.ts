@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import useAuthStore from "@/store/authStore";
 import * as auth from "@/_actions/auth/authClient";
-import { updateProfile } from "@/_actions/profile/profileAction";
+import { updatePassword, updateProfile } from "@/_actions/profile/profileAction";
 
 export function useAuth() {
     const loginAction = useAuthStore((s) => s.login);
@@ -33,7 +33,7 @@ export function useAuth() {
         },
         onError: (error: Error) => {
             console.error("Signup Error:", error);
-        }, 
+        },
     });
 
     const logout = useMutation({
@@ -57,5 +57,15 @@ export function useAuth() {
         },
     });
 
-    return { login, signup, logout, update };
+    const updateClientPassword = useMutation({
+        mutationFn: updatePassword,
+        onSuccess: (data) => {
+            return data.message;
+        },
+        onError: (error: Error) => {
+            console.error("Profile update error:", error);
+        },
+    });
+
+    return { login, signup, logout, update, updateClientPassword };
 }
