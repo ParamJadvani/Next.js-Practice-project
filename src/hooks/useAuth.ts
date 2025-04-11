@@ -33,7 +33,7 @@ export function useAuth() {
         },
         onError: (error: Error) => {
             console.error("Signup Error:", error);
-        },
+        }, 
     });
 
     const logout = useMutation({

@@ -8,7 +8,7 @@ import { Label } from "@radix-ui/react-label";
 import useAuthStore from "@/store/authStore";
 import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UserType } from "@/Types";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
@@ -20,6 +20,8 @@ interface EditProfileDialogProps {
     setUsername: (val: string) => void;
     setEmail: (val: string) => void;
     handleSubmit: (e: React.FormEvent) => void;
+    open: boolean;
+    setOpen: (val: boolean) => void;
 }
 
 interface ChangePasswordDialogProps {
@@ -46,9 +48,11 @@ function EditProfileDialog({
     setUsername,
     setEmail,
     handleSubmit,
+    open,
+    setOpen,
 }: EditProfileDialogProps) {
     return (
-        <Dialog.Root>
+        <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger asChild>
                 <Button variant="outline" size="sm">
                     <Edit className="mr-2 h-4 w-4" />
@@ -252,11 +256,9 @@ export default function ProfilePage() {
 
     const [isResetMode, setIsResetMode] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+    const [open, setOpen] = useState(false);
 
-        console.log(user);
-
+    const handleSubmit = () => {
         if (user && user.id) {
             const obj = {
                 id: user.id,
@@ -266,11 +268,18 @@ export default function ProfilePage() {
                 },
             };
 
-            toast.promise(update.mutateAsync(obj), {
-                loading: "Updating profile...",
-                success: "Profile updated successfully!",
-                error: (err: Error) => err.message,
-            });
+            try {
+                toast.promise(update.mutateAsync(obj), {
+                    loading: "Updating profile...",
+                    success: "Profile updated successfully!",
+                    error: (err: Error) => err.message,
+                });
+                setOpen(false);
+                toast.success("Profile updated successfully!");
+            } catch (err) {
+                console.error("Failed to update profile:", err);
+            } finally {
+            }
         } else {
             toast.error("Invalid user data.");
         }
@@ -293,6 +302,13 @@ export default function ProfilePage() {
         }
         console.log("Resetting password:", { resetNewPassword });
     };
+
+    useEffect(() => {
+        if (username.trim() === "" && email.trim() === "" && user) {
+            setUsername(user.username);
+            setEmail(user.email);
+        }
+    }, [user, email, username]);
 
     return (
         <div className="min-h-screen bg-gray-50 p-8">
@@ -328,6 +344,8 @@ export default function ProfilePage() {
                                     setUsername={setUsername}
                                     setEmail={setEmail}
                                     handleSubmit={handleSubmit}
+                                    open={open}
+                                    setOpen={setOpen}
                                 />
                                 <ChangePasswordDialog
                                     oldPassword={oldPassword}
