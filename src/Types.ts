@@ -16,3 +16,10 @@ export interface ProductType {
         count: number;
     };
 }
+
+export interface CartType {
+    id: string;
+    productId: string;
+    userId: string;
+    quantity: number;
+}

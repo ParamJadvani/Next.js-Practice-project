@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "@/app/globals.css";
 import { QueryProvider } from "@/components/providers/query-provider";
-import AuthHydration from '@/components/auth/AuthHydration';
+import AuthHydration from "@/components/auth/AuthHydration";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +23,7 @@ export default function RootLayout({
                 <QueryProvider>
                     <AuthHydration />
                     {children}
-                    <Toaster />
+                    <Toaster position="top-center" duration={2500} />
                 </QueryProvider>
             </body>
         </html>

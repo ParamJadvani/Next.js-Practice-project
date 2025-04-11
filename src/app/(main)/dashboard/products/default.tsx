@@ -3,38 +3,20 @@
 import { useEffect } from "react";
 import useAuthStore from "@/store/authStore";
 import useProductStore from "@/store/productStore";
-import { Skeleton } from "@/components/ui/skeleton";
 import ProductCard from "@/components/product/Card";
-import { Card } from "@/components/ui/card";
+import useCartStore from "@/store/cartStore";
+import { toast } from "sonner";
 
 export default function Products() {
     const { products, getProducts } = useProductStore();
     const { user } = useAuthStore();
+    const { addToCart } = useCartStore();
 
     useEffect(() => {
         if (user && products.length === 0) {
             getProducts();
         }
     }, [user, products.length, getProducts]);
-
-    const isLoadingState = user && products.length === 0;
-
-    if (isLoadingState) {
-        return (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {Array.from({ length: 6 }).map((_, i) => (
-                    <Card key={i} className="p-4">
-                        <Skeleton className="h-48 w-full rounded-md" />
-                        <div className="space-y-3 mt-4">
-                            <Skeleton className="h-5 w-3/4" />
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-2/3" />
-                        </div>
-                    </Card>
-                ))}
-            </div>
-        );
-    }
 
     if (products.length === 0) {
         return (
@@ -44,10 +26,16 @@ export default function Products() {
         );
     }
 
+    const addToCartFn = (productId: string, quantity: number) => {
+        if (user && addToCart(productId, quantity, user.id))
+            toast.success("Product added to cart!");
+        else toast.error("Failed to add product to cart!");
+    };
+
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} onClick={addToCartFn} />
             ))}
         </div>
     );

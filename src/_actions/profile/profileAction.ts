@@ -32,9 +32,9 @@ export async function updatePassword({ id, data }: { id: string; data: passwordU
     }
 }
 
-export async function forgotUpdatePassword({ id, data }: { id: string; data: passwordUpdateData }) {
+export async function resetPassword({ id, data }: { id: string; data: passwordUpdateData }) {
     try {
-        const response = await axios.put(`/api/profile/${id}/forgot-password`, data);
+        const response = await axios.put(`/api/profile/${id}/reset-password`, data);
         return response.data;
     } catch (error: unknown) {
         if (error instanceof AxiosError)

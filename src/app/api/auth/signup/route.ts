@@ -1,6 +1,6 @@
 import { generateToken } from "@/lib/auth";
 import connectDB from "@/lib/db";
-import { SignupSchema } from "@/lib/validations";
+import { SignupSchema } from "@/schemas/validationSchema";
 import User from "@/models/User";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";

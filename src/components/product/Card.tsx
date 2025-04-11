@@ -6,9 +6,10 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 
 interface CardProps {
     product: ProductType;
+    onClick: (productId: string, quantity: number, userId: string) => void;
 }
 
-export default function ProductCard({ product }: CardProps) {
+export default function ProductCard({ product, onClick }: CardProps) {
     return (
         <Card key={product.id} className="transition-shadow hover:shadow-md">
             <CardHeader className="space-y-2">
@@ -35,7 +36,11 @@ export default function ProductCard({ product }: CardProps) {
                 </div>
             </CardContent>
             <CardFooter className="flex justify-center">
-                <Button variant="outline" className="w-full">
+                <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => onClick(product.id.toString(), 1)}
+                >
                     Add to Cart
                 </Button>
             </CardFooter>

@@ -1,5 +1,6 @@
 import { ProductType } from "@/Types";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import * as productMethods from "@/_actions/products/clientAction";
 
 interface ProductStore {
@@ -9,17 +10,29 @@ interface ProductStore {
     getProductById: (id: string) => void;
 }
 
-const useProductStore = create<ProductStore>((set) => ({
-    products: [],
-    product: null,
-    getProducts: async () => {
-        const response = await productMethods.getProducts();
-        set({ products: response });
-    },
-    getProductById: async (id: string) => {
-        const response = await productMethods.getProduct(id);
-        set({ product: response[0] });
-    },
-}));
+const useProductStore = create<ProductStore>()(
+    persist(
+        (set) => ({
+            products: [],
+            product: null,
+            getProducts: async () => {
+                const response = await productMethods.getProducts();
+                set({ products: response });
+            },
+            getProductById: async (id: string) => {
+                const response = await productMethods.getProduct(id);
+                if (response && response.length > 0) {
+                    set({ product: response[0] });
+                } else {
+                    console.warn(`Product with ID ${id} not found.`);
+                    set({ product: null });
+                }
+            },
+        }),
+        {
+            name: "product-store",
+        }
+    )
+);
 
 export default useProductStore;
