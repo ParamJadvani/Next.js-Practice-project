@@ -51,7 +51,7 @@ export default function GlobalError({
                                 <Button variant="ghost">Cancel</Button>
                                 <Button
                                     className="bg-red-600 text-white hover:bg-red-700"
-                                    onClick={() => (window.location.href = "/")}
+                                    onClick={() => (window.location.href = "/dashboard  ")}
                                 >
                                     Confirm
                                 </Button>

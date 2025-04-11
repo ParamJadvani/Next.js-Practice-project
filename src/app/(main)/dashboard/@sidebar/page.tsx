@@ -3,7 +3,7 @@
 import { JSX, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Box, LayoutDashboard, LogOut, Menu, CircleUserIcon } from "lucide-react";
+import { Box, LayoutDashboard, LogOut, Menu, CircleUserIcon, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
@@ -27,6 +27,11 @@ export default function DashboardSidebarPage() {
             label: "Profile",
             icon: <CircleUserIcon className="h-5 w-5" />,
             href: "/dashboard/profile",
+        },
+        {
+            label: "Shopping Cart",
+            icon: <ShoppingCart className="h-5 w-5" />,
+            href: "/dashboard/shopping-cart",
         },
         {
             label: "Logout",

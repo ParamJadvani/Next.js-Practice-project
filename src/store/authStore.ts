@@ -7,6 +7,7 @@ interface AuthStore {
     login: (user: UserType) => void;
     logout: () => void;
     initialize: (authState: { isLogin: boolean; user: UserType | null }) => void;
+    updateUser: (user: UserType) => void;
 }
 
 const useAuthStore = create<AuthStore>((set) => ({
@@ -15,6 +16,7 @@ const useAuthStore = create<AuthStore>((set) => ({
     login: (user) => set({ isLogin: true, user }),
     logout: () => set({ isLogin: false, user: null }),
     initialize: (authState) => set(authState),
+    updateUser: (user) => set({ user }),
 }));
 
 export default useAuthStore;

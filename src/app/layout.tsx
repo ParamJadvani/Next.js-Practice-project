@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "@/app/globals.css";
 import { QueryProvider } from "@/components/providers/query-provider";
-import { ConditionalNavbar } from "@/components/navbar/ConditionalNavbar";
 import AuthHydration from '@/components/auth/AuthHydration';
 
 const inter = Inter({ subsets: ["latin"] });
@@ -23,10 +22,6 @@ export default function RootLayout({
             <body className={inter.className}>
                 <QueryProvider>
                     <AuthHydration />
-                    <header className="sticky top-0 z-10 bg-white shadow-md">
-                        <ConditionalNavbar />
-                    </header>
-
                     {children}
                     <Toaster />
                 </QueryProvider>
