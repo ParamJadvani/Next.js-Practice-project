@@ -1,81 +1,138 @@
-import { Button } from "@/components/ui/button";
-import { CartType } from "@/Types";
 import Image from "next/image";
-import { MinusCircle, PlusCircle, Trash2 } from "lucide-react";
-
-export default function CartItem({
+import { MinusCircle, PlusCircle, Trash2, ImageOff, Loader2 } from "lucide-react";
+import { EnrichedCartItemType } from "@/Types";
+import { formatCurrency, cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+interface CartItemProps {
+    item: EnrichedCartItemType;
+    onUpdateQuantity: (quantity: number) => void;
+    onRemoveItem: () => void;
+    isUpdating?: boolean;
+}
+export function CartItem({
     item,
-    updateQuantity,
-    removeItem,
-}: {
-    item: CartType;
-    updateQuantity: (quantity: number) => boolean;
-    removeItem: () => boolean;
-}) {
-    const product = item.product;
-
-    if (!product) return null;
-
+    onUpdateQuantity,
+    onRemoveItem,
+    isUpdating = false,
+}: CartItemProps) {
+    const { product, quantity } = item;
+    if (!product) {
+        return (
+            <div className="flex items-center space-x-4 py-4 border-b text-destructive">
+                {" "}
+                <ImageOff className="h-10 w-10 text-muted-foreground" />{" "}
+                <div>
+                    {" "}
+                    <p className="text-sm font-medium">Product information unavailable</p>{" "}
+                    <p className="text-xs">Item ID: {item.productId}</p>{" "}
+                    <Button variant="ghost" size="icon" onClick={onRemoveItem} className="mt-2">
+                        {" "}
+                        <Trash2 className="h-4 w-4" />
+                        <span className="sr-only">Remove unavailable item</span>{" "}
+                    </Button>{" "}
+                </div>{" "}
+            </div>
+        );
+    }
     const handleQuantityChange = (newQuantity: number) => {
         if (newQuantity >= 1) {
-            updateQuantity(newQuantity);
+            onUpdateQuantity(newQuantity);
+        } else if (newQuantity === 0) {
+            onRemoveItem();
         }
     };
-
+    const itemTotal = product.price * quantity;
     return (
-        <div className="flex items-start space-x-4 py-4 border-b last:border-0">
-            <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border">
-                <Image
-                    src={product.image}
-                    alt={product.title}
-                    fill
-                    className="object-cover object-center"
-                    sizes="(max-width: 768px) 100px, 150px"
-                />
-            </div>
-
+        <div
+            className={cn(
+                "flex flex-col sm:flex-row items-start space-x-0 sm:space-x-4 py-4 border-b transition-opacity duration-300",
+                isUpdating ? "opacity-70" : "opacity-100"
+            )}
+        >
+            {" "}
+            <Link href={`/dashboard/products/${product.id}`}>
+                <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border bg-muted mb-3 sm:mb-0">
+                    {" "}
+                    <Image
+                        src={product.image}
+                        alt={product.title}
+                        fill
+                        sizes="100px"
+                        className="object-contain object-center p-1"
+                        onError={(e) => {
+                            e.currentTarget.src =
+                                "https://placehold.co/96x96/e2e8f0/a0aec0?text=N/A";
+                            e.currentTarget.srcset = "";
+                        }}
+                    />{" "}
+                </div>{" "}
+            </Link>
             <div className="flex flex-1 flex-col">
-                <div className="flex justify-between">
-                    <h3 className="text-sm font-medium">{product.title}</h3>
-                    <p className="text-sm font-medium">${product.price.toFixed(2)}</p>
-                </div>
-
-                <p className="mt-1 text-xs text-muted-foreground">Category: {product.category}</p>
-
-                <div className="mt-2 flex items-center space-x-2">
+                {" "}
+                <div className="flex justify-between items-start mb-1">
+                    {" "}
+                    <h3 className="text-sm font-medium text-foreground mr-2 line-clamp-2">
+                        {product.title}
+                    </h3>{" "}
+                    <p className="text-sm font-medium text-foreground whitespace-nowrap">
+                        {formatCurrency(product.price)}
+                    </p>{" "}
+                </div>{" "}
+                <p className="text-xs text-muted-foreground mb-2">Category: {product.category}</p>{" "}
+                <div className="flex items-center justify-between mt-auto">
+                    {" "}
+                    <div className="flex items-center space-x-1.5">
+                        {" "}
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-7 w-7 rounded-full"
+                            onClick={() => handleQuantityChange(quantity - 1)}
+                            disabled={isUpdating || quantity <= 1}
+                            aria-label="Decrease quantity"
+                        >
+                            <MinusCircle className="h-4 w-4" />
+                        </Button>{" "}
+                        <span className="px-2 min-w-[30px] text-center text-sm font-medium tabular-nums">
+                            {quantity}
+                        </span>{" "}
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-7 w-7 rounded-full relative"
+                            onClick={() => handleQuantityChange(quantity + 1)}
+                            disabled={isUpdating}
+                            aria-label="Increase quantity"
+                        >
+                            {" "}
+                            {isUpdating ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                                <PlusCircle className="h-4 w-4" />
+                            )}{" "}
+                        </Button>{" "}
+                    </div>{" "}
                     <Button
-                        variant="outline"
+                        variant="ghost"
                         size="icon"
-                        className="h-7 w-7"
-                        onClick={() => handleQuantityChange(item.quantity - 1)}
-                        disabled={item.quantity <= 1}
+                        onClick={onRemoveItem}
+                        disabled={isUpdating}
+                        className="text-muted-foreground hover:text-destructive"
+                        aria-label="Remove item"
                     >
-                        <MinusCircle className="h-4 w-4" />
-                    </Button>
-
-                    <span className="px-2 min-w-[40px] text-center">{item.quantity}</span>
-
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-7 w-7"
-                        onClick={() => handleQuantityChange(item.quantity + 1)}
-                    >
-                        <PlusCircle className="h-4 w-4" />
-                    </Button>
-
-                    <div className="ml-auto">
-                        <Button variant="ghost" size="icon" onClick={removeItem}>
+                        {" "}
+                        {isUpdating ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
                             <Trash2 className="h-4 w-4" />
-                            <span className="sr-only">Remove</span>
-                        </Button>
-                    </div>
-                </div>
-
-                <div className="mt-1 text-sm font-medium">
-                    Item total: ${(product.price * item.quantity).toFixed(2)}
-                </div>
-            </div>
+                        )}{" "}
+                    </Button>{" "}
+                </div>{" "}
+                <div className="mt-2 text-sm font-medium text-right sm:text-left text-foreground">
+                    Item Total: {formatCurrency(itemTotal)}
+                </div>{" "}
+            </div>{" "}
         </div>
     );
 }

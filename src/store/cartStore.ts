@@ -1,89 +1,106 @@
-import { CartType } from "@/Types";
+// /store/cartStore.ts
+
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { CartItemType } from "@/Types";
 
-// Assuming CartType includes: { id: string, productId: string, quantity: number, userId: string | null }
-interface CartStore {
-    cart: Array<CartType>;
-    addToCart: (productId: string, quantity: number, userId: string) => boolean;
-    removeFromCart: (productId: string, userId: string) => boolean;
-    updateFromCart: (productId: string, quantity: number, userId: string) => boolean;
-    clearCart: () => void;
-    getFromCart: (userId: string) => Array<CartType>;
+interface CartState {
+    cart: CartItemType[];
 }
 
-const useCartStore = create<CartStore>()(
+interface CartActions {
+    addToCart: (productId: string, quantity: number, userId: string) => boolean;
+    removeFromCart: (productId: string, userId: string) => boolean;
+    updateQuantity: (productId: string, quantity: number, userId: string) => boolean;
+    clearCart: (userId: string) => void;
+    getCartForUser: (userId: string) => CartItemType[];
+}
+
+const useCartStore = create<CartState & CartActions>()(
     persist(
         (set, get) => ({
             cart: [],
-            addToCart: (productId: string, quantity: number, userId: string) => {
-                // Check if the product already exists in the cart
-                const existingCartItem = get().cart.find(
+            addToCart: (productId, quantity, userId) => {
+                const currentCart = get().cart;
+                const existingItemIndex = currentCart.findIndex(
                     (item) => item.productId === productId && item.userId === userId
                 );
-                if (existingCartItem) {
-                    // Product already exists, return false
-                    return false;
+
+                if (quantity <= 0) return false;
+                let updatedCart: CartItemType[];
+                if (existingItemIndex > -1) {
+                    console.warn(
+                        `Product ${productId} already in cart for user ${userId}. Consider using updateQuantity or clarifying requirements.`
+                    );
+                    updatedCart = currentCart.map((item, index) =>
+                        index === existingItemIndex
+                            ? { ...item, quantity: item.quantity + quantity }
+                            : item
+                    );
                 } else {
-                    // Generate a unique id for the cart item (e.g., using Date.now())
-                    const newCartItem: CartType = {
-                        id: `${Date.now()}-${Math.random()}`, // Unique id generation
+                    const newCartItem: CartItemType = {
+                        id: `${Date.now()}-${userId}-${productId}-${Math.random()
+                            .toString(36)
+                            .substring(2, 9)}`,
                         productId,
                         quantity,
                         userId,
                     };
-
-                    // Add the new item to the cart
-                    set((state) => ({
-                        cart: [...state.cart, newCartItem],
-                    }));
-                    return true;
+                    updatedCart = [...currentCart, newCartItem];
                 }
+
+                set({ cart: updatedCart });
+                return true;
             },
-            removeFromCart: (productId: string, userId: string) => {
-                // Find the item in the cart
-                const existingCartItem = get().cart.find(
+            removeFromCart: (productId, userId) => {
+                const currentCart = get().cart;
+                const itemExists = currentCart.some(
                     (item) => item.productId === productId && item.userId === userId
                 );
-                if (existingCartItem) {
-                    // Remove the item from the cart
+
+                if (itemExists) {
                     set((state) => ({
                         cart: state.cart.filter(
-                            (item) => item.productId !== productId || item.userId !== userId
+                            (item) => !(item.productId === productId && item.userId === userId)
                         ),
                     }));
                     return true;
                 }
-                return false; // Item not found
+                return false;
             },
-            updateFromCart: (productId: string, quantity: number, userId: string | null) => {
-                // Find the item in the cart
-                const existingCartItem = get().cart.find(
+            updateQuantity: (productId, quantity, userId) => {
+                const currentCart = get().cart;
+                const existingItemIndex = currentCart.findIndex(
                     (item) => item.productId === productId && item.userId === userId
                 );
-                if (existingCartItem) {
-                    // Update the quantity of the existing item
-                    set((state) => ({
-                        cart: state.cart.map((item) =>
-                            item.productId === productId && item.userId === userId
-                                ? { ...item, quantity }
-                                : item
-                        ),
-                    }));
+
+                if (existingItemIndex > -1) {
+                    if (quantity <= 0) {
+                        const updatedCart = currentCart.filter(
+                            (_, index) => index !== existingItemIndex
+                        );
+                        set({ cart: updatedCart });
+                    } else {
+                        const updatedCart = currentCart.map((item, index) =>
+                            index === existingItemIndex ? { ...item, quantity } : item
+                        );
+                        set({ cart: updatedCart });
+                    }
                     return true;
-                } else {
-                    return false; // Product not found to update
                 }
+                return false;
             },
-            clearCart: () => {
-                set({ cart: [] });
+            clearCart: (userId) => {
+                set((state) => ({
+                    cart: state.cart.filter((item) => item.userId !== userId),
+                }));
             },
-            getFromCart: (userId: string) => {
+            getCartForUser: (userId) => {
                 return get().cart.filter((item) => item.userId === userId);
             },
         }),
         {
-            name: "cart-store",
+            name: "shopping-cart-store",
         }
     )
 );

@@ -1,3 +1,5 @@
+// /lib/api.ts
+
 import axios from "axios";
 
 const productApi = axios.create({

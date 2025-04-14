@@ -1,9 +1,14 @@
-"use client";
+// /app/(main)/dashboard/shopping-cart/loading.tsx
 
-export default function LoadingCartPage() {
+import CartPageSkeleton from "@/components/cart/skeletons/CartPageSkeleton";
+
+export default function LoadingShoppingCartPage() {
     return (
-        <div className="flex justify-center items-center mt-12">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+            <h1 className="text-3xl font-bold mb-6 tracking-tight text-transparent bg-muted animate-pulse w-1/2 h-8 rounded-md">
+                {/* Skeleton for the title */}
+            </h1>
+            <CartPageSkeleton />
         </div>
     );
 }

@@ -1,3 +1,5 @@
+// /types/index.ts
+
 export interface UserType {
     id: string;
     username: string;
@@ -17,10 +19,13 @@ export interface ProductType {
     };
 }
 
-export interface CartType {
+export interface CartItemType {
     id: string;
     productId: string;
     userId: string;
     quantity: number;
+}
+
+export interface EnrichedCartItemType extends CartItemType {
     product?: ProductType;
 }
