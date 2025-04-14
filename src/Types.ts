@@ -22,4 +22,5 @@ export interface CartType {
     productId: string;
     userId: string;
     quantity: number;
+    product?: ProductType;
 }

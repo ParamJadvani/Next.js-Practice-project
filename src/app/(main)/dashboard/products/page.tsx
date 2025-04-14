@@ -1,10 +1,10 @@
-// /app/(main)/dashboard/products/page.tsx
+"use server"
 
 import Products from "@/app/(main)/dashboard/products/default";
 import LoadingProductsPage from "@/app/(main)/dashboard/products/loading";
 import { Suspense } from "react";
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
     return (
         <div>
             <h1 className="text-2xl font-bold mb-4">Products</h1> {/* Add a title */}

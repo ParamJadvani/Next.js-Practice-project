@@ -1,47 +1,60 @@
 "use client";
 
-import React from "react";
-import useCartStore from "@/store/cartStore"; // Ensure correct import path
+import { lazy, Suspense } from "react";
+import useAuthStore from "@/store/authStore";
+import useCartStore from "@/store/cartStore";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart, ShoppingBag } from "lucide-react";
+import Link from "next/link";
+import CartContent from "@/components/cart/CartContent";
+
+// const CartItemList = lazy(() => import("@/components/cart/CartClientItem"));
+const CartSkeleton = lazy(() => import("@/app/(main)/dashboard/shopping-cart/loading"));
 
 export default function ShoppingCartPage() {
-    // Get cart data from the Zustand store
-    const cart = useCartStore((state) => state.getFromCart());
+    const user = useAuthStore((s) => s.user);
+    const { getFromCart } = useCartStore();
 
-    // Check if the cart is empty
+    if (!user) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[50vh] p-4">
+                <div className="text-4xl mb-4">
+                    <ShoppingCart className="h-16 w-16 text-muted-foreground" />
+                </div>
+                <h2 className="text-2xl font-semibold mb-2">Your cart is waiting</h2>
+                <p className="text-muted-foreground mb-6">Please log in to view your cart items</p>
+                <Button asChild>
+                    <Link href="/auth/login">Log In</Link>
+                </Button>
+            </div>
+        );
+    }
+
+    const cart = getFromCart(user.id);
+
     if (cart.length === 0) {
         return (
-            <div>
-                <h1 className="text-2xl font-bold mb-4">Shopping Cart</h1>
-                <p>Your cart is empty.</p>
+            <div className="flex flex-col items-center justify-center min-h-[50vh] p-4">
+                <div className="text-4xl mb-4">
+                    <ShoppingBag className="h-16 w-16 text-muted-foreground" />
+                </div>
+                <h2 className="text-2xl font-semibold mb-2">Your cart is empty</h2>
+                <p className="text-muted-foreground mb-6">
+                    Looks like you haven't added anything to your cart yet
+                </p>
+                <Button asChild>
+                    <Link href="/products">Start Shopping</Link>
+                </Button>
             </div>
         );
     }
 
     return (
-        <div>
-            <h1 className="text-2xl font-bold mb-4">Shopping Cart</h1>
-            {/* Render cart items */}
-            <div className="space-y-4">
-                {cart.map((item) => (
-                    <div key={item.id} className="flex justify-between items-center">
-                        <div>
-                            <p className="font-semibold">{item.productId}</p>
-                            <p>Quantity: {item.quantity}</p>
-                        </div>
-                        <div>
-                            <button
-                                className="bg-red-500 text-white px-4 py-2 rounded"
-                                onClick={() => {
-                                    // Logic to remove item from cart
-                                    // removeFromCart(item.productId, item.userId);
-                                }}
-                            >
-                                Remove
-                            </button>
-                        </div>
-                    </div>
-                ))}
-            </div>
+        <div className="max-w-6xl mx-auto px-4 py-8">
+            <h1 className="text-3xl font-bold mb-6">Your Shopping Cart</h1>
+            <Suspense fallback={<CartSkeleton />}>
+                <CartContent cart={cart} userId={user.id} />
+            </Suspense>
         </div>
     );
 }

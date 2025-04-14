@@ -9,7 +9,7 @@ interface CartStore {
     removeFromCart: (productId: string, userId: string) => boolean;
     updateFromCart: (productId: string, quantity: number, userId: string) => boolean;
     clearCart: () => void;
-    getFromCart: () => Array<CartType>;
+    getFromCart: (userId: string) => Array<CartType>;
 }
 
 const useCartStore = create<CartStore>()(
@@ -78,8 +78,8 @@ const useCartStore = create<CartStore>()(
             clearCart: () => {
                 set({ cart: [] });
             },
-            getFromCart: () => {
-                return get().cart;
+            getFromCart: (userId: string) => {
+                return get().cart.filter((item) => item.userId === userId);
             },
         }),
         {
