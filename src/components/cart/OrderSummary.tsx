@@ -64,7 +64,7 @@ export function OrderSummary({ enrichedCartItems }: OrderSummaryProps) {
                     Proceed to Checkout
                 </Button>{" "}
                 <Button variant="outline" asChild className="w-full">
-                    <Link href="/products">
+                    <Link href="/dashboard/products">
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Continue Shopping
                     </Link>
