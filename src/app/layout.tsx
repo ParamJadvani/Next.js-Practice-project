@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "@/app/globals.css";
 import { QueryProvider } from "@/components/providers/query-provider";
 import AuthHydration from "@/components/auth/AuthHydration";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Space_Grotesk({ subsets: ["latin"], weight: ["400"] });
 
 export const metadata: Metadata = {
     title: "My Auth App",
