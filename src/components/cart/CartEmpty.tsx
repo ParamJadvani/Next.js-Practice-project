@@ -17,7 +17,7 @@ export default function CartEmpty() {
                 you love!
             </p>
             <Button asChild size="lg">
-                <Link href="/products">Start Shopping</Link>
+                <Link href="/dashboard/products">Start Shopping</Link>
             </Button>
         </div>
     );

@@ -14,6 +14,7 @@ interface CartActions {
     updateQuantity: (productId: string, quantity: number, userId: string) => boolean;
     clearCart: (userId: string) => void;
     getCartForUser: (userId: string) => CartItemType[];
+    updateCartItem: (cart: CartItemType) => void;
 }
 
 const useCartStore = create<CartState & CartActions>()(
@@ -45,6 +46,7 @@ const useCartStore = create<CartState & CartActions>()(
                         productId,
                         quantity,
                         userId,
+                        totalPrice: 0,
                     };
                     updatedCart = [...currentCart, newCartItem];
                 }
@@ -96,7 +98,12 @@ const useCartStore = create<CartState & CartActions>()(
                 }));
             },
             getCartForUser: (userId) => {
-                return get().cart.filter((item) => item.userId === userId);
+                return get().cart?.filter((item) => item.userId === userId);
+            },
+            updateCartItem: (item) => {
+                set((state) => ({
+                    cart: state.cart.map((i) => (i.id === item.id ? item : i)),
+                }));
             },
         }),
         {

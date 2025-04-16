@@ -26,6 +26,37 @@ export function CartContent({ userId }: CartContentProps) {
     const [error, setError] = useState<string | null>(null);
 
     const cartData = useMemo(() => cart.filter((item) => item.userId === userId), [cart, userId]);
+    // const totalPriceOfEveryProduct = useMemo(() => {
+    //     if (enrichedCart == null) return cart;
+    //     else {
+    //         const data = enrichedCart?.map((item) => {
+    //             if (item.product?.price)
+    //                 return {
+    //                     totalPrice: item.product.price * item.quantity,
+    //                     id: item.id,
+    //                     productId: item.productId,
+    //                     userId: item.userId,
+    //                     quantity: item.quantity,
+    //                 };
+    //             else {
+    //                 return {
+    //                     totalPrice: 0,
+    //                     id: item.id,
+    //                     productId: item.productId,
+    //                     userId: item.userId,
+    //                     quantity: item.quantity,
+    //                 };
+    //             }
+    //         });
+    //         return data;
+    //     }
+    // }, [enrichedCart, cart]);
+
+    // console.log("totalPriceOfEveryProduct", totalPriceOfEveryProduct);
+
+    // useEffect(() => {
+    //     updateCart(totalPriceOfEveryProduct);
+    // }, [totalPriceOfEveryProduct]);
 
     useEffect(() => {
         const isInitialLoad =

@@ -24,8 +24,24 @@ export interface CartItemType {
     productId: string;
     userId: string;
     quantity: number;
+    totalPrice: number;
 }
 
 export interface EnrichedCartItemType extends CartItemType {
     product?: ProductType;
+}
+
+export interface OrderType {
+    id: string;
+    userId: string;
+    cartItems: CartItemType[];
+    address: string;
+    totalPrice: number;
+    status: "pending" | "processing" | "completed" | "cancelled";
+    createdAt: Date;
+    updatedAt?: Date; // Add updatedAt field
+    state: string;
+    city: string;
+    phoneNumber: string;
+    paymentStatus: "paid" | "unpaid";
 }

@@ -3,15 +3,26 @@
 import { JSX, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Box, LayoutDashboard, LogOut, Menu, CircleUserIcon, ShoppingCart } from "lucide-react";
+import {
+    Box,
+    LayoutDashboard,
+    LogOut,
+    Menu,
+    CircleUserIcon,
+    ShoppingCart,
+    ListOrderedIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import useOrderStore from "@/store/orderStore";
+import useAuthStore from "@/store/authStore";
 
 export default function DashboardSidebarPage() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { logout } = useAuth();
-
+    const allOrders = useOrderStore((state) => state.orders);
+    const userId = useAuthStore((state) => state.user?.id);
     const handleLogout = async () => {
         toast.promise(logout.mutateAsync(), {
             loading: "Logging out...",
@@ -40,6 +51,14 @@ export default function DashboardSidebarPage() {
             onClick: handleLogout,
         },
     ];
+
+    if (userId && allOrders.map((order) => order.userId).includes(userId)) {
+        sidebarLinks.push({
+            label: "Orders",
+            icon: <ListOrderedIcon className="h-5 w-5" />,
+            href: "/dashboard/orders",
+        });
+    }
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -97,7 +116,7 @@ function SidebarContent({
                         href={link.href}
                         onClick={(e) => {
                             if (link.onClick) {
-                                e.preventDefault();
+                                e.preventDefault(); // prevent navigation
                                 link.onClick();
                             }
                             onLinkClick?.();

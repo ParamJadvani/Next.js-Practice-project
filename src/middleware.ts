@@ -4,7 +4,7 @@ import { verifyToken } from "@/lib/auth";
 
 const TOKEN_COOKIE_NAME = "authToken";
 const DEFAULT_PROTECTED_REDIRECT = "/dashboard";
-const PROTECTED_PATHS = ["/dashboard"];
+const PROTECTED_PATHS = ["/dashboard", "/order"];
 const AUTH_PATHS = ["/login", "/signup"];
 
 export async function middleware(request: NextRequest) {
