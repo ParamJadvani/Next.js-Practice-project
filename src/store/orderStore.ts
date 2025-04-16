@@ -7,6 +7,7 @@ interface OrderState {
     getOrderById: (orderId: string) => OrderType | undefined;
     updateOrder: (orderId: string, updates: Partial<OrderType>) => void;
     cancelOrder: (orderId: string) => void;
+    addOrder: (order: OrderType) => void;
 }
 
 const useOrderStore = create<OrderState>()(
@@ -14,6 +15,7 @@ const useOrderStore = create<OrderState>()(
         (set, get) => ({
             orders: [],
             getOrderById: (orderId) => get().orders.find((order) => order.id === orderId),
+            addOrder: (order) => set((state) => ({ orders: [...state.orders, order] })),
             updateOrder: (orderId, updates) =>
                 set((state) => ({
                     orders: state.orders.map((order) =>
