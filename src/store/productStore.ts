@@ -21,8 +21,8 @@ const useProductStore = create<ProductStore>()(
             },
             getProductById: async (id: string) => {
                 const response = await productMethods.getProduct(id);
-                if (response && response.length > 0) {
-                    set({ product: response[0] });
+                if (response) {
+                    set({ product: response });
                 } else {
                     console.warn(`Product with ID ${id} not found.`);
                     set({ product: null });

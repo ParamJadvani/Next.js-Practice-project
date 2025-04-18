@@ -31,7 +31,7 @@ export default function MyOrdersPage() {
                     <Alert className="m-4">
                         <Info className="h-4 w-4" />
                         <AlertTitle>No Orders Found</AlertTitle>
-                        <AlertDescription>You haven't placed any orders yet.</AlertDescription>
+                        <AlertDescription>You haven&apos;t placed any orders yet.</AlertDescription>
                     </Alert>
                 ) : (
                     <OrderList orders={userOrders} />

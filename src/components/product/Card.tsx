@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 
 interface CardProps {
     product: ProductType;
-    onClick: (productId: string, quantity: number, userId: string) => void;
+    onClick: (productId: string, quantity: number) => void;
 }
 
 export default function ProductCard({ product, onClick }: CardProps) {

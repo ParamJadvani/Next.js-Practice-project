@@ -48,7 +48,7 @@ export default function Order() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
-                        {!orderConfirmed ? (
+                        {!orderConfirmed && userId ? (
                             <OrderForm
                                 userId={userId}
                                 cartItems={cartItems}

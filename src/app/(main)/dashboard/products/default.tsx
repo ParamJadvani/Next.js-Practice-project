@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import useAuthStore from "@/store/authStore";
 import useProductStore from "@/store/productStore";
@@ -23,7 +23,9 @@ export default function Products() {
     const initialQuery = searchParams.get("q") || "";
     const [searchQuery, setSearchQuery] = useState(initialQuery);
     const [filteredProducts, setFilteredProducts] = useState<ProductType[]>(products);
-    const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+
+    // Use useRef instead of useState for the timeout
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     // Fetch products on initial load
     useEffect(() => {
@@ -55,19 +57,21 @@ export default function Products() {
 
     // Debounced search function
     useEffect(() => {
-        if (searchTimeout) {
-            clearTimeout(searchTimeout); // Clear previous timeout if searchQuery changes
+        // Clear the previous timeout
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
         }
 
         // Set a new timeout to apply search after 1 second of inactivity
-        const timeout = setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
             updateSearch(searchQuery);
         }, 1000);
 
-        setSearchTimeout(timeout);
-
+        // Cleanup function
         return () => {
-            clearTimeout(timeout); // Cleanup on component unmount or before next search
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
         };
     }, [searchQuery, updateSearch]);
 
@@ -78,8 +82,9 @@ export default function Products() {
 
     // Handle button click search
     const handleSearchButtonClick = () => {
-        if (searchTimeout) {
-            clearTimeout(searchTimeout); // Clear timeout if user manually clicked search
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
         }
         updateSearch(searchQuery); // Trigger immediate search on button click
     };
